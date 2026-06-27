@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -27,9 +28,12 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private DiscoveryClient discoveryClient;
 
+    @Autowired
+    private LoadBalancerClient loadBalancerClient;
+
     @Override
     public Order createOrder(long userId, long productId) {
-        Product productById = getProductFromRemote(productId);
+        Product productById = getProductFromRemoteBalancer(productId);
         Order order = new Order();
         order.setOrderId(2L)
             .setUserId(userId)
@@ -39,6 +43,15 @@ public class OrderServiceImpl implements OrderService {
         	.setTotalPrice(productById.getPrice().multiply(new BigDecimal(productById.getNum())))
         	;
         return order;
+    }
+
+    private Product getProductFromRemoteBalancer(long productId){
+        ServiceInstance choose = loadBalancerClient.choose("service-product");
+        String url= "http://"+choose.getHost()+":"+choose.getPort()+"/product/"+productId;
+        log.info("远程请求{}",url);
+        Product productById = restTemplate.getForObject(url, Product.class);
+        return productById;
+
     }
 
     private Product getProductFromRemote(long productId){

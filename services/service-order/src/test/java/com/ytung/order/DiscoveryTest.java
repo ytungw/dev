@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
+
 import java.util.List;
 
 @SpringBootTest
@@ -12,6 +14,9 @@ public class DiscoveryTest {
 
     @Autowired
     private DiscoveryClient discoveryClient;
+
+    @Autowired
+    private LoadBalancerClient loadBalancerClient;
 
     @Test
     void test(){
@@ -22,5 +27,19 @@ public class DiscoveryTest {
                 System.out.println(service+":"+instance.getHost()+":"+instance.getPort());
             }
         }
+    }
+
+    @Test
+    void testLoadBalancer(){
+        ServiceInstance choose = loadBalancerClient.choose("service-product");
+        System.out.println(choose.getHost()+choose.getPort());
+        choose = loadBalancerClient.choose("service-product");
+        System.out.println(choose.getHost()+choose.getPort());
+        choose = loadBalancerClient.choose("service-product");
+        System.out.println(choose.getHost()+choose.getPort());
+        choose = loadBalancerClient.choose("service-product");
+        System.out.println(choose.getHost()+choose.getPort());
+        choose = loadBalancerClient.choose("service-product");
+        System.out.println(choose.getHost()+choose.getPort());
     }
 }
