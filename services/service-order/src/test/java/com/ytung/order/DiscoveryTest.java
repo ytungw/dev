@@ -55,5 +55,7 @@ public class DiscoveryTest {
         System.out.println(restTemplate.getForObject(url, Product.class));
     }
 
+    //test
+
 
 }
