@@ -31,36 +31,43 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private LoadBalancerClient loadBalancerClient;
 
-    //todo 通过注解的形式测试负载均衡
-
     @Override
     public Order createOrder(long userId, long productId) {
-        Product productById = getProductFromRemoteBalancer(productId);
+        Product productById = getProductFromRemoteBalancedAnnotation(productId);
         Order order = new Order();
         order.setOrderId(2L)
-            .setUserId(userId)
-        	.setNickName("su")
-        	.setAddress("重庆")
-        	.setProducts(Arrays.asList(productById))
-        	.setTotalPrice(productById.getPrice().multiply(new BigDecimal(productById.getNum())))
-        	;
+                .setUserId(userId)
+                .setNickName("su")
+                .setAddress("重庆")
+                .setProducts(Arrays.asList(productById))
+                .setTotalPrice(productById.getPrice().multiply(new BigDecimal(productById.getNum())))
+        ;
         return order;
     }
 
-    private Product getProductFromRemoteBalancer(long productId){
+    //通过注解的形式实现远程调用
+
+    private Product getProductFromRemoteBalancedAnnotation(long productId) {
+        String url = "http://service-product/product/" + productId;
+        Product productById = restTemplate.getForObject(url, Product.class);
+        return productById;
+    }
+
+
+    private Product getProductFromRemoteBalancer(long productId) {
         ServiceInstance choose = loadBalancerClient.choose("service-product");
-        String url= "http://"+choose.getHost()+":"+choose.getPort()+"/product/"+productId;
-        log.info("远程请求{}",url);
+        String url = "http://" + choose.getHost() + ":" + choose.getPort() + "/product/" + productId;
+        log.info("远程请求{}", url);
         Product productById = restTemplate.getForObject(url, Product.class);
         return productById;
 
     }
 
-    private Product getProductFromRemote(long productId){
+    private Product getProductFromRemote(long productId) {
         List<ServiceInstance> instances = discoveryClient.getInstances("service-product");
         ServiceInstance productInstance = instances.get(0);
-        String url= "http://"+productInstance.getHost()+":"+productInstance.getPort()+"/product/"+productId;
-        log.info("远程请求{}",url);
+        String url = "http://" + productInstance.getHost() + ":" + productInstance.getPort() + "/product/" + productId;
+        log.info("远程请求{}", url);
         Product productById = restTemplate.getForObject(url, Product.class);
         return productById;
     }
