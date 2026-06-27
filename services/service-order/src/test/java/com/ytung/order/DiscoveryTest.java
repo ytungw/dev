@@ -29,6 +29,7 @@ public class DiscoveryTest {
         }
     }
 
+    //测试负载均衡
     @Test
     void testLoadBalancer(){
         ServiceInstance choose = loadBalancerClient.choose("service-product");

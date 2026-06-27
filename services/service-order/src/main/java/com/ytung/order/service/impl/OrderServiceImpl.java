@@ -31,6 +31,8 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private LoadBalancerClient loadBalancerClient;
 
+    //todo 通过注解的形式测试负载均衡
+
     @Override
     public Order createOrder(long userId, long productId) {
         Product productById = getProductFromRemoteBalancer(productId);
