@@ -33,7 +33,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order createOrder(long userId, long productId) {
-        Product productById = getProductFromRemoteBalancedAnnotation(productId);
+        Product productById = productFeign.getProductById(productId);
         Order order = new Order();
         order.setOrderId(2L)
                 .setUserId(userId)
@@ -69,6 +69,7 @@ public class OrderServiceImpl implements OrderService {
         String url = "http://" + productInstance.getHost() + ":" + productInstance.getPort() + "/product/" + productId;
         log.info("远程请求{}", url);
         Product productById = restTemplate.getForObject(url, Product.class);
+
         return productById;
     }
 }

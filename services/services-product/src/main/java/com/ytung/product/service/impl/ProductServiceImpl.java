@@ -12,17 +12,17 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Product getProductById(long productId) {
         Product product = new Product();
-        product.setProductId(1L)
+        product.setProductId(productId)
         	.setProductName("iPhone17")
         	.setNum(2)
         	.setPrice(new BigDecimal("5999"))
         	;
 
-//        try {
-//            TimeUnit.SECONDS.sleep(100);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            TimeUnit.SECONDS.sleep(1);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         return product;
     }
 }
