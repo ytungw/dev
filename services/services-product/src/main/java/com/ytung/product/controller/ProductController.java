@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.awt.color.ProfileDataException;
 
 @RestController
-public class ProductController {
+public class
+ProductController {
     @Autowired
     private ProductService productService;
     @GetMapping("/product/{productId}")
