@@ -18,11 +18,14 @@ public class ProductServiceImpl implements ProductService {
         	.setPrice(new BigDecimal("5999"))
         	;
 
+        System.out.println("hello");
+
         try {
-            TimeUnit.SECONDS.sleep(1);
+            TimeUnit.SECONDS.sleep(10);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
         return product;
     }
 }

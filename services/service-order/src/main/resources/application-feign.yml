@@ -4,5 +4,6 @@ spring:
       client:
         config:
           service-product:
-            connect-time: 3000
+            connect-timeout: 3000
             read-timeout: 3000
+#            retryer:
