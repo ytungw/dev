@@ -11,4 +11,5 @@ public class OrderProperties {
     String timeOut;
 
     String autoConfirm;
+
 }

@@ -3,6 +3,7 @@ package com.ytung.order.controller;
 import com.ytung.bean.order.Order;
 import com.ytung.order.properties.OrderProperties;
 import com.ytung.order.service.OrderService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -31,13 +32,13 @@ public class OrderController {
 //    }
 
     @GetMapping("/config")
-    public String config(){
-        return orderProperties.getTimeOut()+"-"+orderProperties.getAutoConfirm();
+    public String config() {
+        return orderProperties.getTimeOut() + "-" + orderProperties.getAutoConfirm();
     }
 
 
     @GetMapping("/create")
     public Order createOrder(@RequestParam("userId") long userId, @RequestParam("productId") long productId) {
-        return orderService.createOrder(userId,productId);
+        return orderService.createOrder(userId, productId);
     }
 }
